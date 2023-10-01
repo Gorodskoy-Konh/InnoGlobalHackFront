@@ -27,48 +27,59 @@ class _AuthPageState extends State<_AuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(300.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _codeController,
-                decoration: const InputDecoration(
-                  hintText: 'Введите код',
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        switch (state) {
+          case AuthTokenOrganizationSaved _:
+            context.router.push(const MainRoute());
+          case AuthTokenSaved _:
+            context.read<AuthCubit>().sendTokenOrganizationId(_organizationIdController.text);
+          default:
+            break;
+        }
+      },
+      child: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(300.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextFormField(
+                  controller: _codeController,
+                  decoration: const InputDecoration(
+                    hintText: 'Введите код',
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextFormField(
-                controller: _organizationIdController,
-                decoration: const InputDecoration(
-                  hintText: 'Введите id организации',
+                const SizedBox(
+                  height: 15,
                 ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  context.read<AuthCubit>().requestCode();
-                },
-                child: const Text('Получить код'),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  context.read<AuthCubit>().getToken(_codeController.text);
-                  context.router.push(const MainRoute());
-                },
-                child: const Text('Отправить код'),
-              ),
-            ],
+                TextFormField(
+                  controller: _organizationIdController,
+                  decoration: const InputDecoration(
+                    hintText: 'Введите id организации',
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    context.read<AuthCubit>().requestCode();
+                  },
+                  child: const Text('Получить код'),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    context.read<AuthCubit>().getToken(_codeController.text);
+                  },
+                  child: const Text('Отправить код'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

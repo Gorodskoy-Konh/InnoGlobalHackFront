@@ -5,10 +5,19 @@ sealed class AuthState {}
 
 class AuthInitial extends AuthState {}
 
-class AuthSuccessful extends AuthState {
+class AuthTokenSaved extends AuthState {
   final String token;
 
-  AuthSuccessful({required this.token});
+  AuthTokenSaved({required this.token});
+}
+
+class AuthTokenOrganizationSaved extends AuthTokenSaved {
+  final String organizationId;
+
+  AuthTokenOrganizationSaved({
+    required super.token,
+    required this.organizationId,
+  });
 }
 
 class AuthLoading extends AuthState {}

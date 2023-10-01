@@ -10,14 +10,20 @@ part 'worker.g.dart';
 class Worker with _$Worker {
   const factory Worker({
     required String id,
-    required List<(int, int)> workingSchedule,
-    required List<Stack> stack,
+    required String login,
+    @Default(('09:00', '18:00')) (String, String) workingSchedule,
+    @Default({WeekDays.mon,WeekDays.tue,WeekDays.wed,WeekDays.thu,WeekDays.fri,}) Set<WeekDays> workingDays,
+    @Default([]) List<String> stack,
   }) = _Worker;
 
   factory Worker.fromJson(Map<String, dynamic> json) => _$WorkerFromJson(json);
 }
 
-enum WeekDays { mon, tue, wed, thu, fri, sat, sun }
+enum WeekDays { mon('Пн'), tue('Вт'), wed('Ср'), thu('Чт'), fri('Пт'), sat('Сб'), sun('Вс');
+final String name;
+
+const WeekDays(this.name);
+}
 
 enum Stack {
   cpp('c++'),
